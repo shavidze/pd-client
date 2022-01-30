@@ -4,7 +4,7 @@ export function handleError(error: AxiosError): string {
   let message = "";
   if (error.response) {
     message = error.response.data
-      ? error.response.data.data.message
+      ? error.response.data.message
       : "Unexpected Error";
   } else if (error.request) {
     message = "Connection Error";
