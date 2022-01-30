@@ -1,7 +1,6 @@
-import { FC, useRef, useState, useEffect } from "react";
+import { FC, useState, useEffect } from "react";
 
-import { FileType } from "../../constants/FileType";
-import { FileEndings } from "../../constants/FileEndings";
+import FileEndings from "../../constants/FileEndings";
 
 import { useForm } from "react-hook-form/";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -11,7 +10,6 @@ import { useGetDeckService, useUploadDeckService } from "./store/services";
 
 import { AxiosRequestConfig } from "axios";
 import Progress from "../../UI/Progress/";
-
 type Props = {
   a: string;
 };
@@ -19,37 +17,24 @@ type DataType = {
   deck: FileList;
 };
 const DeckPage: FC<Props> = () => {
-  const acceptFileEndings = `${FileEndings[FileType.PDF]},${
-    FileEndings[FileType.PPT]
-  }`;
-  const acceptedFormats = [
-    "application/ppt",
-    "application/pptx",
-    "application/pptm",
-    "application/pdf",
-  ];
-  console.log(acceptedFormats);
-  console.log(acceptFileEndings);
+  const acceptedFormats = Object.keys(FileEndings).map(
+    (key) => `application/${FileEndings[key]}`
+  );
   const getDeck = useGetDeckService();
   const uploadDeck = useUploadDeckService();
-  const [file, setFile] = useState<File>(null);
-  const [fileName, setFileName] = useState<string>("");
   const [progress, setProgress] = useState(0);
-  const FILE_MXSIZE = 1000000;
 
   const schema = yup.object().shape({
     deck: yup
       .mixed()
       .required("You need to select a file")
-      .test("file-size", "File is too large !", (val) => {
-        console.log("szd 0", val);
-        return val && val[0].size <= FILE_MXSIZE;
-      })
-      .test("file-format", "Unsupported Format", (val) => {
-        console.log("file 0", val);
-
-        return val && acceptedFormats.includes(val[0].type);
-      }),
+      .test(
+        "fileFormat",
+        "You're trying to upload unsupported format",
+        (file) => {
+          return file && acceptedFormats.includes(file[0].type);
+        }
+      ),
   });
   const {
     register,
@@ -67,10 +52,7 @@ const DeckPage: FC<Props> = () => {
       const progressHasDone = Math.round(
         (progressEvent.loaded / progressEvent.total) * 100
       );
-      console.log("progress - ", progressHasDone);
-
       setProgress(progressHasDone);
-      console.log("progress - ", progress);
     },
   };
   const onSubmit = (data: DataType) => {
@@ -80,7 +62,6 @@ const DeckPage: FC<Props> = () => {
     formData.append("file", deck[0]);
     uploadDeck(formData, config);
     reset();
-    setProgress(0);
   };
 
   useEffect(() => {
@@ -90,19 +71,31 @@ const DeckPage: FC<Props> = () => {
   return (
     <>
       <div className="flex flex-col items-center justify-center">
-        <p>Upload your patch deck</p>
+        <p className="text-xl mt-2 font-medium pr-2 text-coolgray-900 mb-4">
+          Upload your patch deck
+        </p>
         <form onSubmit={handleSubmit(onSubmit)}>
           <input
+            className="form-control block w-full px-2 py-1.5 text-xl font-mono text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-900 focus:bg-white focus: border-blue-400 focus:outline-none"
             type="file"
-            accept=".pdf"
             id="fileInput"
             multiple={false}
             name="deck"
             {...register("deck")}
           />
-          {errors.deck && <p className="error">{errors.deck.message}</p>}
-          <Progress percentage={progress} />
-          <button className="bg-white focus:shadow-outline">Submit</button>
+          {errors.deck && (
+            <p className="error w-full text-center mt-1 font-medium">
+              {errors.deck.message}
+            </p>
+          )}
+          <div className="mt-5">
+            <Progress percentage={progress} />
+          </div>
+          <div className="w-full flex justify-center items-center">
+            <button className="mt-5 mx-auto inline-block px-6 py-2.5 bg-blue-800 text-white font-medium text-xs leading-tight uppercase rounded shadow-lg hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">
+              Submit
+            </button>
+          </div>
         </form>
       </div>
     </>

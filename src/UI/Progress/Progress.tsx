@@ -7,9 +7,8 @@ type Props = {
 };
 
 const Progress: FC<Props> = ({ percentage = 0, variant = "determinate" }) => {
-  console.log("pre", percentage);
   return (
-    <Box className="mx-auto" sx={{ width: "80%" }}>
+    <Box className="mx-auto" sx={{ width: "100%" }}>
       <LinearProgress variant={variant} value={percentage} />
     </Box>
   );

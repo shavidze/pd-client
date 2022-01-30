@@ -4,7 +4,7 @@ import DeckPage from "./features/DeckViewer/DeckPage";
 import "./theme/styles.scss";
 function App() {
   return (
-    <div className="flex">
+    <div className="p-4 bg-gray-100 h-screen">
       <Switch>
         <Route exact path="/">
           <DeckPage />

@@ -1,4 +1,7 @@
-export const FileEndings = {
-  PDF: ".pdf",
-  PPT: ".pptx, .ppt, .pptm",
+const FileFormats = {
+  PDF: "pdf",
+  PPT: "ppt",
+  PPTX: "pptx",
+  PPTM: "pptm",
 };
+export default FileFormats;

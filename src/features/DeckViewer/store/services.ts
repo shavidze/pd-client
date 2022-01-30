@@ -38,8 +38,8 @@ export const useUploadDeckService = () => {
       dispatch(uploadFileStart());
       return uploadDeckApi(fileData, config)
         .then((respnose) => {
-          console.log(respnose);
           dispatch(uploadFileSuccess());
+          toast.success("File Uploaded Successfully", { autoClose: 2500 });
         })
         .catch((error: any) => {
           let errorMessage = handleError(error);
