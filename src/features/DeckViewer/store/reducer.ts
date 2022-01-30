@@ -1,18 +1,19 @@
 import { Reducer } from "redux";
+import { ResponseDataImages } from "../../../constants/types/Image";
 
 import { Actions, DeckActions } from "./actions";
 
 export interface DeckState {
   loadingUpload: boolean;
   loadingDownload: boolean;
-  currentDeck: any;
+  currentDeck: ResponseDataImages;
   error: string;
 }
 
 const initialState: DeckState = {
   loadingUpload: false,
   loadingDownload: false,
-  currentDeck: {},
+  currentDeck: { id: "", images: [] },
   error: "",
 };
 const DeckReducer: Reducer<DeckState, DeckActions> = (

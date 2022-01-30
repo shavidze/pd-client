@@ -5,8 +5,8 @@ import rootReducer from "./rootReducer";
 const composeEnhancers = composeWithDevTools({ trace: true, traceLimit: 25 });
 
 const store = createStore(
-    rootReducer,
-    composeEnhancers(applyMiddleware(thunk))
+  rootReducer,
+  composeEnhancers(applyMiddleware(thunk))
 );
 
 export type RootState = ReturnType<typeof rootReducer>;

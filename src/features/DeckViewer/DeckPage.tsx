@@ -2,14 +2,21 @@ import { FC, useState, useEffect } from "react";
 
 import FileEndings from "../../constants/FileEndings";
 
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
+
 import { useForm } from "react-hook-form/";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 import { useGetDeckService, useUploadDeckService } from "./store/services";
-
 import { AxiosRequestConfig } from "axios";
+
+import { useIfChanged, usePrevious } from "../../hooks/usePrevious";
+
 import Progress from "../../UI/Progress/";
+import DeckList from "./components/DeckList";
+
 type Props = {
   a: string;
 };
@@ -23,7 +30,9 @@ const DeckPage: FC<Props> = () => {
   const getDeck = useGetDeckService();
   const uploadDeck = useUploadDeckService();
   const [progress, setProgress] = useState(0);
-
+  const { currentDeck } = useSelector((state: RootState) => state.deckReducer);
+  const ifCurrentDeckChanged = usePrevious(currentDeck);
+  console.log(ifCurrentDeckChanged);
   const schema = yup.object().shape({
     deck: yup
       .mixed()
@@ -36,6 +45,7 @@ const DeckPage: FC<Props> = () => {
         }
       ),
   });
+
   const {
     register,
     handleSubmit,
@@ -44,6 +54,7 @@ const DeckPage: FC<Props> = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
+
   const config: AxiosRequestConfig = {
     headers: {
       "Content-Type": "multipart/form-data",
@@ -55,26 +66,28 @@ const DeckPage: FC<Props> = () => {
       setProgress(progressHasDone);
     },
   };
+
   const onSubmit = (data: DataType) => {
     if (!data) return;
     const { deck } = data;
     const formData = new FormData();
     formData.append("file", deck[0]);
-    uploadDeck(formData, config);
+    uploadDeck(formData, config).then(() => {
+      setProgress(0);
+      return getDeck();
+    });
     reset();
   };
-
   useEffect(() => {
     getDeck();
   }, []);
-
   return (
     <>
       <div className="flex flex-col items-center justify-center">
         <p className="text-xl mt-2 font-medium pr-2 text-coolgray-900 mb-4">
-          Upload your patch deck
+          Upload your pitch deck
         </p>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form className="mb-9" onSubmit={handleSubmit(onSubmit)}>
           <input
             className="form-control block w-full px-2 py-1.5 text-xl font-mono text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-900 focus:bg-white focus: border-blue-400 focus:outline-none"
             type="file"
@@ -97,6 +110,14 @@ const DeckPage: FC<Props> = () => {
             </button>
           </div>
         </form>
+        <div className="flex justify-center flex-col">
+          {currentDeck && (
+            <p className="text-center text-xl mt-2 font-medium pr-2 text-coolgray-900 mb-4">
+              Current Pitch Deck
+            </p>
+          )}
+          <DeckList data={currentDeck} />
+        </div>
       </div>
     </>
   );

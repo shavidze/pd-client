@@ -11,17 +11,19 @@ import {
 } from "./actions";
 import { handleError } from "../../../helpers/handleError";
 import { useCallback } from "react";
-import { AxiosRequestConfig } from "axios";
+import { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
+import { ResponseDataImages } from "../../../constants/types/Image";
+import { debug } from "console";
 export const useGetDeckService = () => {
   const getDeckApi = useGetDeckApi();
   const dispatch = useDispatch();
   return useCallback((): Promise<void> => {
     dispatch(getDeckStart());
     return getDeckApi()
-      .then((response: any) => {
-        dispatch(getDeckSuccess(response));
+      .then((response: AxiosResponse<ResponseDataImages>) => {
+        dispatch(getDeckSuccess(response.data));
       })
-      .catch((error: any) => {
+      .catch((error: AxiosError) => {
         let errorMessage = handleError(error);
         dispatch(getDeckFailure());
         toast.error(errorMessage);
@@ -37,13 +39,13 @@ export const useUploadDeckService = () => {
     (fileData: FormData, config: AxiosRequestConfig): Promise<void> => {
       dispatch(uploadFileStart());
       return uploadDeckApi(fileData, config)
-        .then((respnose) => {
+        .then((respnose: AxiosResponse) => {
           dispatch(uploadFileSuccess());
           toast.success("File Uploaded Successfully", { autoClose: 2500 });
         })
-        .catch((error: any) => {
+        .catch((error: AxiosError) => {
           let errorMessage = handleError(error);
-          dispatch(getDeckFailure());
+          dispatch(uploadFileFailure());
           toast.error(errorMessage);
         });
     },

@@ -1,4 +1,6 @@
-export function handleError(error: any): string {
+import { AxiosError } from "axios";
+
+export function handleError(error: AxiosError): string {
   let message = "";
   if (error.response) {
     message = error.response.data

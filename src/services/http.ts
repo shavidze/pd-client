@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from "axios";
 const axios = require("axios");
-const apiBaseUrl = "https://httpbin.org";
+const apiBaseUrl = "https://localhost:44342/PitchDeck";
 export class Http {
   static post(path: string, data?: any, config?: AxiosRequestConfig) {
     return axios.post(`${apiBaseUrl}${path}`, data, config);

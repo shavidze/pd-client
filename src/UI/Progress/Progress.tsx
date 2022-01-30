@@ -10,6 +10,7 @@ const Progress: FC<Props> = ({ percentage = 0, variant = "determinate" }) => {
   return (
     <Box className="mx-auto" sx={{ width: "100%" }}>
       <LinearProgress variant={variant} value={percentage} />
+      <i>{`${percentage}%`}</i>
     </Box>
   );
 };

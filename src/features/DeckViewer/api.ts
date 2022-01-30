@@ -5,7 +5,7 @@ import { Http } from "../../services/http";
 export function useUploadDeckApi() {
   return useCallback(
     (fileData: FormData, config: AxiosRequestConfig): Promise<any> => {
-      return Http.post("/post", fileData, config);
+      return Http.post("/upload", fileData, config);
     },
     []
   );
