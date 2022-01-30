@@ -1,6 +1,4 @@
 import { useEffect, useRef } from "react";
-import equal from "deep-equal";
-
 export const usePrevious = <T>(value: T) => {
   const ref = useRef<T>();
   useEffect(() => {

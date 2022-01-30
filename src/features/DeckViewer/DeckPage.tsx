@@ -12,8 +12,6 @@ import * as yup from "yup";
 import { useGetDeckService, useUploadDeckService } from "./store/services";
 import { AxiosRequestConfig } from "axios";
 
-import { useIfChanged, usePrevious } from "../../hooks/usePrevious";
-
 import Progress from "../../UI/Progress/";
 import DeckList from "./components/DeckList";
 
@@ -31,8 +29,6 @@ const DeckPage: FC<Props> = () => {
   const uploadDeck = useUploadDeckService();
   const [progress, setProgress] = useState(0);
   const { currentDeck } = useSelector((state: RootState) => state.deckReducer);
-  const ifCurrentDeckChanged = usePrevious(currentDeck);
-  console.log(ifCurrentDeckChanged);
   const schema = yup.object().shape({
     deck: yup
       .mixed()

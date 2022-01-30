@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { AxiosRequestConfig } from "axios";
-import { Http } from "../../services/http";
+import Http from "../../services/http";
 
 export function useUploadDeckApi() {
   return useCallback(
