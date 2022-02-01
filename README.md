@@ -1,7 +1,7 @@
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
+before run the project you should create .env.local at the root of the project and declare variable REACT_APP_API_URL.
 ## Available Scripts
 
 In the project directory, you can run:
