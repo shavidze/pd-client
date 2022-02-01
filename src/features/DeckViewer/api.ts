@@ -5,7 +5,7 @@ import Http from "../../services/http";
 export function useUploadDeckApi() {
   return useCallback(
     (fileData: FormData, config: AxiosRequestConfig): Promise<any> => {
-      return Http.post("/upload", fileData, config);
+      return Http.post("pitchdeck/upload", fileData, config);
     },
     []
   );
@@ -13,6 +13,6 @@ export function useUploadDeckApi() {
 
 export function useGetDeckApi() {
   return useCallback((): Promise<any> => {
-    return Http.get("/get");
+    return Http.get("pitchdeck/get");
   }, []);
 }
