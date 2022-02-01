@@ -14,6 +14,7 @@ import { AxiosRequestConfig } from "axios";
 
 import Progress from "../../UI/Progress/";
 import DeckList from "./components/DeckList";
+import Loader from "../../UI/Loader/Loader";
 
 type Props = {
   a: string;
@@ -30,7 +31,7 @@ const DeckPage: FC<Props> = () => {
   const getDeck = useGetDeckService();
   const uploadDeck = useUploadDeckService();
   const [progress, setProgress] = useState(0);
-  const { currentDeck } = useSelector((state: RootState) => state.deckReducer);
+  const { currentDeck, loadingDownload } = useSelector((state: RootState) => state.deckReducer);
   const schema = yup.object().shape({
     deck: yup
       .mixed()
@@ -116,7 +117,7 @@ const DeckPage: FC<Props> = () => {
               Current Pitch Deck
             </p>
           )}
-          <DeckList data={currentDeck} />
+          {loadingDownload ? <Loader position="fixed" /> : <DeckList data={currentDeck} />}
         </div>
       </div>
     </>
