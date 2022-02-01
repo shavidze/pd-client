@@ -13,7 +13,6 @@ import { handleError } from "../../../helpers/handleError";
 import { useCallback } from "react";
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { ResponseDataImages } from "../../../constants/types/Image";
-import { debug } from "console";
 export const useGetDeckService = () => {
   const getDeckApi = useGetDeckApi();
   const dispatch = useDispatch();
@@ -49,6 +48,6 @@ export const useUploadDeckService = () => {
           toast.error(errorMessage);
         });
     },
-    []
+    [uploadDeckApi, dispatch]
   );
 };

@@ -16,22 +16,20 @@ import Progress from "../../UI/Progress/";
 import DeckList from "./components/DeckList";
 import Loader from "../../UI/Loader/Loader";
 
-type Props = {
-  a: string;
-};
 type DataType = {
   deck: FileList;
 };
 
-
-const DeckPage: FC<Props> = () => {
+const DeckPage: FC<{}> = () => {
   const acceptedFormats = Object.keys(FileEndings).map(
     (key) => `application/${FileEndings[key]}`
   );
   const getDeck = useGetDeckService();
   const uploadDeck = useUploadDeckService();
   const [progress, setProgress] = useState(0);
-  const { currentDeck, loadingDownload } = useSelector((state: RootState) => state.deckReducer);
+  const { currentDeck, loadingDownload } = useSelector(
+    (state: RootState) => state.deckReducer
+  );
   const schema = yup.object().shape({
     deck: yup
       .mixed()
@@ -40,8 +38,17 @@ const DeckPage: FC<Props> = () => {
         "fileFormat",
         "You're trying to upload unsupported format",
         (file) => {
-          console.log(file[0])
-          return file && acceptedFormats.includes(file[0].type);
+          if (!file) return false;
+          if (file[0].type) {
+            return acceptedFormats.includes(file[0].type);
+          }
+          // if client local machine misses registry for file types
+          return [
+            FileEndings.PDF,
+            FileEndings.PPT,
+            FileEndings.PPTM,
+            FileEndings.PPTX,
+          ].includes(file[0].name.split(".").pop());
         }
       ),
   });
@@ -67,7 +74,6 @@ const DeckPage: FC<Props> = () => {
     },
   };
 
-  
   const onSubmit = (data: DataType) => {
     if (!data) return;
     const { deck } = data;
@@ -117,7 +123,11 @@ const DeckPage: FC<Props> = () => {
               Current Pitch Deck
             </p>
           )}
-          {loadingDownload ? <Loader position="fixed" /> : <DeckList data={currentDeck} />}
+          {loadingDownload ? (
+            <Loader position="fixed" />
+          ) : (
+            <DeckList data={currentDeck} />
+          )}
         </div>
       </div>
     </>
