@@ -21,6 +21,8 @@ type Props = {
 type DataType = {
   deck: FileList;
 };
+
+
 const DeckPage: FC<Props> = () => {
   const acceptedFormats = Object.keys(FileEndings).map(
     (key) => `application/${FileEndings[key]}`
@@ -37,6 +39,7 @@ const DeckPage: FC<Props> = () => {
         "fileFormat",
         "You're trying to upload unsupported format",
         (file) => {
+          console.log(file[0])
           return file && acceptedFormats.includes(file[0].type);
         }
       ),
@@ -63,6 +66,7 @@ const DeckPage: FC<Props> = () => {
     },
   };
 
+  
   const onSubmit = (data: DataType) => {
     if (!data) return;
     const { deck } = data;
